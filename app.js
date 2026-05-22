@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 const { initDb } = require('./models')
 const middleware = require('./utils/middleware')
 
@@ -12,6 +13,7 @@ const app = express()
 
 initDb()
 
+app.use(cors())
 app.use(express.json())
 app.use(middleware.requestLogger)
 
