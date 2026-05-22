@@ -1,0 +1,222 @@
+### Variables
+@baseUrl = http://localhost:3001/api
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3ODQ5NTc0MywiZXhwIjoxNzc4NTgyMTQzfQ.1wnWk0eLt_qYjIT4gNU8Fw9gYnLFpcjwLL6_8bKgCLE
+@organizerToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJvcmdhbml6ZXIxIiwicm9sZSI6Im9yZ2FuaXplciIsImlhdCI6MTc3ODQ5NTg1MSwiZXhwIjoxNzc4NTgyMjUxfQ.fMkgJB5tnWhYH09F8XEa0FnyhL1TUPF-DQExt8cOpGA
+@playerToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJwbGF5ZXIxIiwicm9sZSI6InBsYXllciIsImlhdCI6MTc3ODQ5NTg3MCwiZXhwIjoxNzc4NTgyMjcwfQ.xcIdX6k6k3AmCyegfkcIoNFoTwrLoYQL_TJ5PXUxCQU
+@player2Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidXNlcm5hbWUiOiJwbGF5ZXIyIiwicm9sZSI6InBsYXllciIsImlhdCI6MTc3ODQ5NTg4MiwiZXhwIjoxNzc4NTgyMjgyfQ.J56_NFyeLccsa7sfpoMd2jA3y7HwWwXWyUYHGFrC1So
+
+### ==================== AUTH ====================
+
+### Login admin
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin1234"
+}
+
+### Login organizer
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+    "username": "organizer1",
+    "password": "1234"
+}
+
+### Login player1
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+    "username": "player1",
+    "password": "1234"
+}
+
+### Login player2
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+    "username": "player2",
+    "password": "1234"
+}
+
+### ==================== USUARIOS ====================
+
+### Crear organizer (token admin)
+POST {{baseUrl}}/users
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+    "username": "organizer1",
+    "email": "organizer1@test.com",
+    "password": "1234",
+    "role": "organizer"
+}
+
+### Crear player1 (sin token)
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+    "username": "player1",
+    "email": "player1@test.com",
+    "password": "1234"
+}
+
+### Crear player2 (sin token)
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+    "username": "player2",
+    "email": "player2@test.com",
+    "password": "1234"
+}
+
+### Ver todos los usuarios (token admin)
+GET {{baseUrl}}/users
+Authorization: Bearer {{adminToken}}
+
+### Ver perfil usuario
+GET {{baseUrl}}/users/player1
+
+### ==================== VIDEOJUEGOS ====================
+
+### Crear videojuego (token admin)
+POST {{baseUrl}}/videogames
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+    "name": "Street Fighter 6",
+    "description": "Juego de lucha 1v1"
+}
+
+### Ver todos los videojuegos (público)
+GET {{baseUrl}}/videogames
+
+### Borrar videojuego (token admin)
+DELETE {{baseUrl}}/videogames/1
+Authorization: Bearer {{adminToken}}
+
+### ==================== TORNEOS ====================
+
+### Crear torneo (token organizer)
+POST {{baseUrl}}/tournaments
+Content-Type: application/json
+Authorization: Bearer {{organizerToken}}
+
+{
+    "name": "Torneo Street Fighter",
+    "description": "Primer torneo de prueba",
+    "videogame_id": 1,
+    "type": "elimination",
+    "start_date": "2026-05-01",
+    "max_players": 4
+}
+
+### Ver todos los torneos (público)
+GET {{baseUrl}}/tournaments
+
+### Ver torneo (público)
+GET {{baseUrl}}/tournaments/1
+
+### Modificar torneo (token organizer)
+PUT {{baseUrl}}/tournaments/1
+Content-Type: application/json
+Authorization: Bearer {{organizerToken}}
+
+{
+    "name": "Torneo Street Fighter Modificado",
+    "end_date": "2026-02-01"
+}
+
+### Iniciar torneo (token organizer)
+POST {{baseUrl}}/tournaments/1/start
+Authorization: Bearer {{organizerToken}}
+
+### Finalizar torneo (token organizer)
+POST {{baseUrl}}/tournaments/1/finish
+Authorization: Bearer {{organizerToken}}
+
+### Eliminar torneo (token organizer)
+DELETE {{baseUrl}}/tournaments/1
+Authorization: Bearer {{organizerToken}}
+
+### ==================== INSCRIPCIONES ====================
+
+### Inscribir player1 (token player1)
+POST {{baseUrl}}/tournaments/1/register
+Authorization: Bearer {{playerToken}}
+
+### Inscribir player2 (token player2)
+POST {{baseUrl}}/tournaments/1/register
+Authorization: Bearer {{player2Token}}
+
+### Aprobar player1 (token organizer)
+PUT {{baseUrl}}/tournaments/1/players/3
+Content-Type: application/json
+Authorization: Bearer {{organizerToken}}
+
+{
+    "status": "approved"
+}
+
+### Aprobar player2 (token organizer)
+PUT {{baseUrl}}/tournaments/1/players/4
+Content-Type: application/json
+Authorization: Bearer {{organizerToken}}
+
+{
+    "status": "approved"
+}
+
+### ==================== PARTIDAS ====================
+
+### Ver partida (público)
+GET {{baseUrl}}/matches/1
+
+### Asignar jugadores a partida (token organizer)
+PUT {{baseUrl}}/matches/1
+Content-Type: application/json
+Authorization: Bearer {{organizerToken}}
+
+{
+    "player1_id": 3,
+    "player2_id": 4,
+    "status": "assigned"
+}
+
+### Completar partida (token organizer)
+PUT {{baseUrl}}/matches/1
+Content-Type: application/json
+Authorization: Bearer {{organizerToken}}
+
+{
+    "winner_id": 3,
+    "status": "completed",
+    "score_player1": 3,
+    "score_player2": 1
+}
+
+### Jugador intenta modificar partida (debe dar forbidden)
+PUT {{baseUrl}}/matches/1
+Content-Type: application/json
+Authorization: Bearer {{playerToken}}
+
+{
+    "status": "assigned"
+}
+
+### Modificar partida completada (debe dar error)
+PUT {{baseUrl}}/matches/1
+Content-Type: application/json
+Authorization: Bearer {{organizerToken}}
+
+{
+    "status": "assigned"
+}
