@@ -113,7 +113,7 @@ Authorization: Bearer {{organizerToken}}
 {
     "name": "Torneo Street Fighter",
     "description": "Primer torneo de prueba",
-    "videogame_id": 1,
+    "videogame_id": 6,
     "type": "elimination",
     "start_date": "2026-05-01",
     "max_players": 4

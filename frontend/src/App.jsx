@@ -7,6 +7,8 @@ import RegisterPage from './pages/RegisterPage'
 import VideogamesPage from './pages/VideogamesPage'
 import TournamentsPage from './pages/TournamentsPage'
 import TournamentDetailPage from './pages/TournamentDetailPage'
+import TournamentCreatePage from './pages/TournamentCreatePage'
+import TournamentManagePage from './pages/TournamentManagePage'
 import ProfilePage from './pages/ProfilePage'
 import NotFoundPage from './pages/NotFoundPage'
 
@@ -20,7 +22,17 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/videogames" element={<VideogamesPage />} />
         <Route path="/tournaments" element={<TournamentsPage />} />
+        <Route path="/tournaments/new" element={
+          <ProtectedRoute roles={['organizer']}>
+            <TournamentCreatePage />
+          </ProtectedRoute>
+        } />
         <Route path="/tournaments/:id" element={<TournamentDetailPage />} />
+        <Route path="/tournaments/:id/manage" element={
+          <ProtectedRoute roles={['organizer', 'admin']}>
+            <TournamentManagePage />
+          </ProtectedRoute>
+        } />
         <Route path="/profile/:username" element={
           <ProtectedRoute>
             <ProfilePage />
