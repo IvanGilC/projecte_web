@@ -10,41 +10,27 @@ function EliminationBracket({ matches, players }) {
   const getPlayer = (id) => players.find(p => p.id === id)
 
   return (
-    <div style={{ overflowX: 'auto' }}>
-      <div style={{ display: 'flex', gap: '2rem', minWidth: 'max-content', padding: '1rem 0' }}>
+    <div className="table-responsive">
+      <div className="bracket-grid">
         {rounds.map(round => (
-          <div key={round} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <h4 style={{ textAlign: 'center', margin: '0 0 0.5rem' }}>{round}</h4>
+          <div key={round} className="bracket-column">
+            <h4 className="text-center mb-05">{round}</h4>
             {matches.filter(m => m.round === round).map(m => {
               const p1 = getPlayer(m.player1_id)
               const p2 = getPlayer(m.player2_id)
               const winner = getPlayer(m.winner_id)
               return (
-                <div key={m.id} style={{
-                  border: '1px solid #ccc',
-                  borderRadius: '4px',
-                  overflow: 'hidden',
-                  minWidth: '180px'
-                }}>
-                  <div style={{
-                    padding: '0.4rem 0.6rem',
-                    background: winner?.id === p1?.id ? '#d4edda' : '#f8f9fa',
-                    borderBottom: '1px solid #ccc',
-                    fontWeight: winner?.id === p1?.id ? 'bold' : 'normal'
-                  }}>
-                    {p1 ? p1.username : '—'}
+                <div key={m.id} className="bracket-card">
+                  <div className={winner?.id === p1?.id ? 'bracket-player winner' : 'bracket-player'}>
+                    <span>{p1 ? p1.username : '—'}</span>
                     {m.score_player1 !== null && (
-                      <span style={{ float: 'right', color: '#555' }}>{m.score_player1}</span>
+                      <span className="text-muted">{m.score_player1}</span>
                     )}
                   </div>
-                  <div style={{
-                    padding: '0.4rem 0.6rem',
-                    background: winner?.id === p2?.id ? '#d4edda' : '#f8f9fa',
-                    fontWeight: winner?.id === p2?.id ? 'bold' : 'normal'
-                  }}>
-                    {p2 ? p2.username : '—'}
+                  <div className={winner?.id === p2?.id ? 'bracket-player winner' : 'bracket-player'}>
+                    <span>{p2 ? p2.username : '—'}</span>
                     {m.score_player2 !== null && (
-                      <span style={{ float: 'right', color: '#555' }}>{m.score_player2}</span>
+                      <span className="text-muted">{m.score_player2}</span>
                     )}
                   </div>
                 </div>
@@ -94,45 +80,42 @@ function LeagueTable({ matches, players }) {
   }).sort((a, b) => b.points - a.points || b.goalDiff - a.goalDiff)
 
   return (
-    <div style={{ overflowX: 'auto' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '500px' }}>
+    <div className="table-responsive">
+      <table className="table table-compact">
         <thead>
-          <tr style={{ borderBottom: '2px solid #ccc', textAlign: 'left', background: '#f8f9fa' }}>
-            <th style={{ padding: '0.5rem' }}>#</th>
-            <th style={{ padding: '0.5rem' }}>Player</th>
-            <th style={{ padding: '0.5rem', textAlign: 'center' }}>P</th>
-            <th style={{ padding: '0.5rem', textAlign: 'center' }}>W</th>
-            <th style={{ padding: '0.5rem', textAlign: 'center' }}>L</th>
-            <th style={{ padding: '0.5rem', textAlign: 'center' }}>GF</th>
-            <th style={{ padding: '0.5rem', textAlign: 'center' }}>GA</th>
-            <th style={{ padding: '0.5rem', textAlign: 'center' }}>GD</th>
-            <th style={{ padding: '0.5rem', textAlign: 'center' }}>Pts</th>
+          <tr>
+            <th>#</th>
+            <th>Player</th>
+            <th className="text-center">P</th>
+            <th className="text-center">W</th>
+            <th className="text-center">L</th>
+            <th className="text-center">GF</th>
+            <th className="text-center">GA</th>
+            <th className="text-center">GD</th>
+            <th className="text-center">Pts</th>
           </tr>
         </thead>
         <tbody>
           {stats.map((s, i) => (
-            <tr key={s.player.id} style={{
-              borderBottom: '1px solid #eee',
-              background: i === 0 ? '#fff9e6' : 'white'
-            }}>
-              <td style={{ padding: '0.5rem', color: '#888' }}>{i + 1}</td>
-              <td style={{ padding: '0.5rem' }}>
+            <tr key={s.player.id} className={i === 0 ? 'table-row-highlight' : ''}>
+              <td className="text-muted">{i + 1}</td>
+              <td>
                 <strong>{s.player.username}</strong>
               </td>
-              <td style={{ padding: '0.5rem', textAlign: 'center' }}>{s.played}</td>
-              <td style={{ padding: '0.5rem', textAlign: 'center', color: 'green' }}>{s.wins}</td>
-              <td style={{ padding: '0.5rem', textAlign: 'center', color: 'red' }}>{s.losses}</td>
-              <td style={{ padding: '0.5rem', textAlign: 'center' }}>{s.goalsFor}</td>
-              <td style={{ padding: '0.5rem', textAlign: 'center' }}>{s.goalsAgainst}</td>
-              <td style={{ padding: '0.5rem', textAlign: 'center' }}>{s.goalDiff > 0 ? `+${s.goalDiff}` : s.goalDiff}</td>
-              <td style={{ padding: '0.5rem', textAlign: 'center' }}>
+              <td className="text-center">{s.played}</td>
+              <td className="text-center text-green">{s.wins}</td>
+              <td className="text-center text-red">{s.losses}</td>
+              <td className="text-center">{s.goalsFor}</td>
+              <td className="text-center">{s.goalsAgainst}</td>
+              <td className="text-center">{s.goalDiff > 0 ? `+${s.goalDiff}` : s.goalDiff}</td>
+              <td className="text-center">
                 <strong>{s.points}</strong>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <p style={{ fontSize: '0.8rem', color: '#888', marginTop: '0.5rem' }}>
+      <p className="text-muted text-small mt-05">
         P: Played · W: Wins · L: Losses · GF: Goals For · GA: Goals Against · GD: Goal Difference · Pts: Points
       </p>
     </div>
@@ -204,8 +187,8 @@ function TournamentDetailPage() {
     return status
   }
 
-  if (loading) return <p style={{ padding: '2rem' }}>Loading...</p>
-  if (error) return <p style={{ padding: '2rem', color: 'red' }}>{error}</p>
+  if (loading) return <p className="page-container">Loading...</p>
+  if (error) return <p className="text-error page-container">{error}</p>
   if (!tournament) return null
 
   const hasStarted = tournament.status !== 'planned'
@@ -213,42 +196,30 @@ function TournamentDetailPage() {
   const isLeague = tournament.type === 'league'
 
   return (
-    <div style={{ maxWidth: '900px', margin: '2rem auto', padding: '1rem' }}>
+    <div className="page-container">
 
       {/* Cabecera */}
       <h1>{tournament.name}</h1>
-      <div style={{ color: '#555', marginBottom: '1rem' }}>
+      <div className="meta-inline text-muted mb-1">
         <span>{statusLabel(tournament.status)}</span>
-        <span style={{ margin: '0 0.5rem' }}>·</span>
         <span>Type: {tournament.type}</span>
-        <span style={{ margin: '0 0.5rem' }}>·</span>
         <span>Max players: {tournament.max_players}</span>
-        <span style={{ margin: '0 0.5rem' }}>·</span>
         <span>Start: {tournament.start_date}</span>
         {tournament.end_date && (
-          <>
-            <span style={{ margin: '0 0.5rem' }}>·</span>
-            <span>End: {tournament.end_date}</span>
-          </>
+          <span>End: {tournament.end_date}</span>
         )}
       </div>
 
       {tournament.description && (
-        <p style={{ marginBottom: '1rem' }}>{tournament.description}</p>
+        <p className="mb-1">{tournament.description}</p>
       )}
 
       {/* Botón de gestión para organizers y admins */}
       {(user?.role === 'organizer' || user?.role === 'admin') && (
-        <div style={{ marginBottom: '1.5rem' }}>
+        <div className="mb-15">
           <Link
             to={`/tournaments/${tournament.id}/manage`}
-            style={{
-              padding: '0.5rem 1rem',
-              border: '1px solid #333',
-              borderRadius: '4px',
-              textDecoration: 'none',
-              color: '#333'
-            }}
+            className="button-link button-link-secondary"
           >
             ⚙️ Manage Tournament
           </Link>
@@ -257,32 +228,32 @@ function TournamentDetailPage() {
 
       {/* Botón de inscripción para players */}
       {user?.role === 'player' && tournament.status === 'planned' && tournament.registrations_open === 1 && (
-        <div style={{ marginBottom: '1.5rem' }}>
+        <div className="mb-15">
           {isAlreadyRegistered() ? (
-            <p style={{ color: 'green' }}>✅ You are already registered in this tournament.</p>
+            <p className="text-success">✅ You are already registered in this tournament.</p>
           ) : (
             <button
               onClick={handleRegister}
               disabled={registerLoading}
-              style={{ padding: '0.5rem 1.2rem' }}
+              className="button"
             >
               {registerLoading ? 'Registering...' : 'Register to this tournament'}
             </button>
           )}
-          {registerMsg && <p style={{ color: 'green', marginTop: '0.5rem' }}>{registerMsg}</p>}
-          {registerError && <p style={{ color: 'red', marginTop: '0.5rem' }}>{registerError}</p>}
+          {registerMsg && <p className="text-success mt-05">{registerMsg}</p>}
+          {registerError && <p className="text-error mt-05">{registerError}</p>}
         </div>
       )}
 
       {user?.role === 'player' && tournament.status === 'planned' && tournament.registrations_open === 0 && (
-        <p style={{ marginBottom: '1.5rem', color: '#888' }}>🔴 Registrations are closed.</p>
+        <p className="text-muted mb-15">🔴 Registrations are closed.</p>
       )}
 
       {/* Organizadores */}
-      <section style={{ marginBottom: '1.5rem' }}>
+      <section className="section">
         <h2>Organizers</h2>
         {tournament.organizers.length === 0 ? (
-          <p style={{ color: '#888' }}>No support organizers.</p>
+          <p className="text-muted">No support organizers.</p>
         ) : (
           <ul>
             {tournament.organizers.map(o => (
@@ -293,64 +264,52 @@ function TournamentDetailPage() {
       </section>
 
       {/* Jugadores inscritos */}
-      <section style={{ marginBottom: '1.5rem' }}>
+      <section className="section">
         <h2>Players</h2>
         {tournament.players.length === 0 ? (
-          <p style={{ color: '#888' }}>No players registered yet.</p>
+          <p className="text-muted">No players registered yet.</p>
         ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid #ccc', textAlign: 'left' }}>
-                <th style={{ padding: '0.4rem' }}>Username</th>
-                <th style={{ padding: '0.4rem' }}>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tournament.players.map(p => (
-                <tr key={p.id} style={{ borderBottom: '1px solid #eee' }}>
-                  <td style={{ padding: '0.4rem' }}>{p.username}</td>
-                  <td style={{ padding: '0.4rem' }}>
-                    {p.status === 'approved' && '✅ Approved'}
-                    {p.status === 'pending' && '⏳ Pending'}
-                    {p.status === 'rejected' && '❌ Rejected'}
-                  </td>
+          <div className="table-responsive">
+            <table className="table table-compact">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {tournament.players.map(p => (
+                  <tr key={p.id}>
+                    <td>{p.username}</td>
+                    <td>
+                      {p.status === 'approved' && '✅ Approved'}
+                      {p.status === 'pending' && '⏳ Pending'}
+                      {p.status === 'rejected' && '❌ Rejected'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </section>
 
       {/* Partidas */}
-      <section style={{ marginBottom: '1.5rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-          <h2 style={{ margin: 0 }}>Matches</h2>
+      <section className="section">
+        <div className="flex flex-between align-center mb-1">
+          <h2 className="m-0">Matches</h2>
           {hasStarted && (
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div className="flex gap-05">
               <button
                 onClick={() => setView('table')}
-                style={{
-                  padding: '0.3rem 0.7rem',
-                  background: view === 'table' ? '#333' : 'white',
-                  color: view === 'table' ? 'white' : '#333',
-                  border: '1px solid #333',
-                  borderRadius: '4px',
-                  cursor: 'pointer'
-                }}
+                className={view === 'table' ? 'button-toggle active' : 'button-toggle'}
               >
                 Table
               </button>
               {isElimination && (
                 <button
                   onClick={() => setView('bracket')}
-                  style={{
-                    padding: '0.3rem 0.7rem',
-                    background: view === 'bracket' ? '#333' : 'white',
-                    color: view === 'bracket' ? 'white' : '#333',
-                    border: '1px solid #333',
-                    borderRadius: '4px',
-                    cursor: 'pointer'
-                  }}
+                  className={view === 'bracket' ? 'button-toggle active' : 'button-toggle'}
                 >
                   Bracket
                 </button>
@@ -358,14 +317,7 @@ function TournamentDetailPage() {
               {isLeague && (
                 <button
                   onClick={() => setView('league')}
-                  style={{
-                    padding: '0.3rem 0.7rem',
-                    background: view === 'league' ? '#333' : 'white',
-                    color: view === 'league' ? 'white' : '#333',
-                    border: '1px solid #333',
-                    borderRadius: '4px',
-                    cursor: 'pointer'
-                  }}
+                  className={view === 'league' ? 'button-toggle active' : 'button-toggle'}
                 >
                   Standings
                 </button>
@@ -375,43 +327,45 @@ function TournamentDetailPage() {
         </div>
 
         {tournament.matches.length === 0 ? (
-          <p style={{ color: '#888' }}>No matches yet.</p>
+          <p className="text-muted">No matches yet.</p>
         ) : (
           <>
             {view === 'table' && (
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr style={{ borderBottom: '1px solid #ccc', textAlign: 'left' }}>
-                    <th style={{ padding: '0.4rem' }}>Round</th>
-                    <th style={{ padding: '0.4rem' }}>Player 1</th>
-                    <th style={{ padding: '0.4rem' }}>Player 2</th>
-                    <th style={{ padding: '0.4rem' }}>Score</th>
-                    <th style={{ padding: '0.4rem' }}>Winner</th>
-                    <th style={{ padding: '0.4rem' }}>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tournament.matches.map(m => {
-                    const p1 = tournament.players.find(p => p.id === m.player1_id)
-                    const p2 = tournament.players.find(p => p.id === m.player2_id)
-                    const winner = tournament.players.find(p => p.id === m.winner_id)
-                    return (
-                      <tr key={m.id} style={{ borderBottom: '1px solid #eee' }}>
-                        <td style={{ padding: '0.4rem' }}>{m.round || '—'}</td>
-                        <td style={{ padding: '0.4rem' }}>{p1 ? p1.username : '—'}</td>
-                        <td style={{ padding: '0.4rem' }}>{p2 ? p2.username : '—'}</td>
-                        <td style={{ padding: '0.4rem' }}>
-                          {m.score_player1 !== null && m.score_player2 !== null
-                            ? `${m.score_player1} - ${m.score_player2}`
-                            : '—'}
-                        </td>
-                        <td style={{ padding: '0.4rem' }}>{winner ? winner.username : '—'}</td>
-                        <td style={{ padding: '0.4rem' }}>{matchStatusLabel(m.status)}</td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
+              <div className="table-responsive">
+                <table className="table table-compact">
+                  <thead>
+                    <tr>
+                      <th>Round</th>
+                      <th>Player 1</th>
+                      <th>Player 2</th>
+                      <th>Score</th>
+                      <th>Winner</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tournament.matches.map(m => {
+                      const p1 = tournament.players.find(p => p.id === m.player1_id)
+                      const p2 = tournament.players.find(p => p.id === m.player2_id)
+                      const winner = tournament.players.find(p => p.id === m.winner_id)
+                      return (
+                        <tr key={m.id}>
+                          <td>{m.round || '—'}</td>
+                          <td>{p1 ? p1.username : '—'}</td>
+                          <td>{p2 ? p2.username : '—'}</td>
+                          <td>
+                            {m.score_player1 !== null && m.score_player2 !== null
+                              ? `${m.score_player1} - ${m.score_player2}`
+                              : '—'}
+                          </td>
+                          <td>{winner ? winner.username : '—'}</td>
+                          <td>{matchStatusLabel(m.status)}</td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
             )}
 
             {view === 'bracket' && isElimination && (
@@ -433,26 +387,28 @@ function TournamentDetailPage() {
 
       {/* Clasificación final */}
       {tournament.status === 'finished' && tournament.standings && tournament.standings.length > 0 && (
-        <section style={{ marginBottom: '1.5rem' }}>
+        <section className="section">
           <h2>Final Standings</h2>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid #ccc', textAlign: 'left' }}>
-                <th style={{ padding: '0.4rem' }}>Position</th>
-                <th style={{ padding: '0.4rem' }}>Player</th>
-                <th style={{ padding: '0.4rem' }}>Points</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tournament.standings.map(s => (
-                <tr key={s.id} style={{ borderBottom: '1px solid #eee' }}>
-                  <td style={{ padding: '0.4rem' }}>#{s.position}</td>
-                  <td style={{ padding: '0.4rem' }}>{s.username}</td>
-                  <td style={{ padding: '0.4rem' }}>{s.points}</td>
+          <div className="table-responsive">
+            <table className="table table-compact">
+              <thead>
+                <tr>
+                  <th>Position</th>
+                  <th>Player</th>
+                  <th>Points</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {tournament.standings.map(s => (
+                  <tr key={s.id}>
+                    <td>#{s.position}</td>
+                    <td>{s.username}</td>
+                    <td>{s.points}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </section>
       )}
 

@@ -59,26 +59,24 @@ function TournamentsPage() {
   }
 
   return (
-    <div style={{ maxWidth: '900px', margin: '2rem auto', padding: '1rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className="page-container">
+      <div className="flex flex-between mb-1">
         <h1>Tournaments</h1>
       </div>
 
       {/* Filtros */}
-      <div style={{
-        display: 'flex', gap: '0.75rem', marginBottom: '1.5rem', flexWrap: 'wrap'
-      }}>
+      <div className="flex gap-1 mb-15 flex-wrap">
         <input
           type="text"
           placeholder="Search by name..."
           value={filterName}
           onChange={(e) => setFilterName(e.target.value)}
-          style={{ flex: 1, minWidth: '160px', padding: '0.5rem' }}
+          className="form-control"
         />
         <select
           value={filterVideogame}
           onChange={(e) => setFilterVideogame(e.target.value)}
-          style={{ flex: 1, minWidth: '160px', padding: '0.5rem' }}
+          className="form-control"
         >
           <option value="">All videogames</option>
           {videogames.map(vg => (
@@ -88,7 +86,7 @@ function TournamentsPage() {
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          style={{ flex: 1, minWidth: '140px', padding: '0.5rem' }}
+          className="form-control"
         >
           <option value="">All statuses</option>
           <option value="planned">Planned</option>
@@ -98,51 +96,29 @@ function TournamentsPage() {
       </div>
 
       {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="text-error">{error}</p>}
 
       {!loading && !error && filtered.length === 0 && (
         <p>No tournaments found.</p>
       )}
 
       {!loading && !error && filtered.map(t => (
-        <div
-          key={t.id}
-          style={{
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            padding: '1rem',
-            marginBottom: '0.75rem',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}
-        >
+        <div key={t.id} className="card flex flex-between align-start">
           <div>
-            <strong style={{ fontSize: '1.1rem' }}>{t.name}</strong>
-            <div style={{ marginTop: '0.25rem', color: '#555', fontSize: '0.9rem' }}>
+            <strong className="card-title">{t.name}</strong>
+            <div className="meta-inline text-muted text-small mt-05">
               <span>{videogameName(t.videogame_id)}</span>
-              <span style={{ margin: '0 0.5rem' }}>·</span>
               <span>{statusLabel(t.status)}</span>
-              <span style={{ margin: '0 0.5rem' }}>·</span>
               <span>Max players: {t.max_players}</span>
-              <span style={{ margin: '0 0.5rem' }}>·</span>
               <span>Start: {t.start_date}</span>
             </div>
             {t.description && (
-              <p style={{ margin: '0.4rem 0 0', fontSize: '0.9rem' }}>{t.description}</p>
+              <p className="text-muted mt-05">{t.description}</p>
             )}
           </div>
           <Link
             to={`/tournaments/${t.id}`}
-            style={{
-              marginLeft: '1rem',
-              padding: '0.4rem 0.9rem',
-              border: '1px solid #333',
-              borderRadius: '4px',
-              textDecoration: 'none',
-              color: '#333',
-              whiteSpace: 'nowrap'
-            }}
+            className="button-link button-link-secondary"
           >
             View →
           </Link>

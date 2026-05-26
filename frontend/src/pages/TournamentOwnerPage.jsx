@@ -184,126 +184,126 @@ function TournamentOwnerPage() {
     }
   }
 
-  if (loading) return <p style={{ padding: '2rem' }}>Loading...</p>
-  if (error) return <p style={{ padding: '2rem', color: 'red' }}>{error}</p>
+  if (loading) return <p className="page-container">Loading...</p>
+  if (error) return <p className="text-error page-container">{error}</p>
   if (!tournament) return null
-  if (!isOwner) return <p style={{ padding: '2rem', color: 'red' }}>403 - Only the owner can access this page.</p>
+  if (!isOwner) return <p className="text-error page-container">403 - Only the owner can access this page.</p>
 
   return (
-    <div style={{ maxWidth: '800px', margin: '2rem auto', padding: '1rem' }}>
+    <div className="page-container-mid">
 
       {/* Cabecera */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+      <div className="flex flex-between align-center mb-15">
         <h1>{tournament.name} — Owner Settings</h1>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button onClick={() => navigate(`/tournaments/${id}`)}>
+        <div className="card-actions">
+          <button className="button" onClick={() => navigate(`/tournaments/${id}`)}>
             View Public Page
           </button>
-          <button onClick={() => navigate(`/tournaments/${id}/manage`)}>
+          <button className="button" onClick={() => navigate(`/tournaments/${id}/manage`)}>
             Manage
           </button>
         </div>
       </div>
 
       {/* Editar datos del torneo */}
-      <section style={{ marginBottom: '2rem', padding: '1rem', border: '1px solid #ccc', borderRadius: '4px' }}>
+      <section className="card mb-15">
         <h2>Edit Tournament Data</h2>
         <form onSubmit={handleEditSubmit}>
-          <div style={{ marginBottom: '1rem' }}>
+          <div className="form-group">
             <label>Name *</label><br />
             <input
               type="text"
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
               required
-              style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
+              className="form-control"
             />
           </div>
-          <div style={{ marginBottom: '1rem' }}>
+          <div className="form-group">
             <label>Description</label><br />
             <textarea
               value={editDescription}
               onChange={(e) => setEditDescription(e.target.value)}
               rows={3}
-              style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
+              className="form-control"
             />
           </div>
-          <div style={{ marginBottom: '1rem' }}>
+          <div className="form-group">
             <label>Start Date *</label><br />
             <input
               type="date"
               value={editStartDate}
               onChange={(e) => setEditStartDate(e.target.value)}
               required
-              style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
+              className="form-control"
             />
           </div>
-          <div style={{ marginBottom: '1rem' }}>
-            <label>End Date <span style={{ color: '#888', fontSize: '0.85rem' }}>(optional)</span></label><br />
+          <div className="form-group">
+            <label>End Date <span className="text-muted text-small">(optional)</span></label><br />
             <input
               type="date"
               value={editEndDate}
               onChange={(e) => setEditEndDate(e.target.value)}
-              style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
+              className="form-control"
             />
           </div>
-          {editError && <p style={{ color: 'red' }}>{editError}</p>}
-          {editSuccess && <p style={{ color: 'green' }}>{editSuccess}</p>}
-          <button type="submit" disabled={editLoading}>
+          {editError && <p className="text-error">{editError}</p>}
+          {editSuccess && <p className="text-success">{editSuccess}</p>}
+          <button type="submit" disabled={editLoading} className="button">
             {editLoading ? 'Saving...' : 'Save Changes'}
           </button>
         </form>
       </section>
 
       {/* Acciones del torneo */}
-      <section style={{ marginBottom: '2rem', padding: '1rem', border: '1px solid #ccc', borderRadius: '4px' }}>
+      <section className="card mb-15">
         <h2>Tournament Actions</h2>
 
         {tournament.status === 'planned' && (
-          <div style={{ marginBottom: '1rem' }}>
+          <div className="mb-1">
             <p>
               Registrations are currently: <strong>
                 {tournament.registrations_open === 1 ? '🟢 Open' : '🔴 Closed'}
               </strong>
             </p>
-            <button onClick={handleToggleRegistrations} disabled={actionLoading}>
+            <button className="button" onClick={handleToggleRegistrations} disabled={actionLoading}>
               {tournament.registrations_open === 1 ? 'Close Registrations' : 'Open Registrations'}
             </button>
           </div>
         )}
 
         {tournament.status === 'planned' && (
-          <div style={{ marginBottom: '1rem' }}>
-            <p style={{ color: '#555', fontSize: '0.9rem' }}>
+          <div className="mb-1">
+            <p className="text-muted text-small">
               Starting the tournament will assign all approved players to their matches.
             </p>
-            <button onClick={handleStart} disabled={actionLoading}>
+            <button className="button" onClick={handleStart} disabled={actionLoading}>
               🚀 Start Tournament
             </button>
           </div>
         )}
 
         {tournament.status === 'ongoing' && (
-          <div style={{ marginBottom: '1rem' }}>
-            <p style={{ color: '#555', fontSize: '0.9rem' }}>
+          <div className="mb-1">
+            <p className="text-muted text-small">
               All matches must be completed before finishing the tournament.
             </p>
-            <button onClick={handleFinish} disabled={actionLoading}>
+            <button className="button" onClick={handleFinish} disabled={actionLoading}>
               🏁 Finish Tournament
             </button>
           </div>
         )}
 
-        {actionError && <p style={{ color: 'red' }}>{actionError}</p>}
-        {actionSuccess && <p style={{ color: 'green' }}>{actionSuccess}</p>}
+        {actionError && <p className="text-error">{actionError}</p>}
+        {actionSuccess && <p className="text-success">{actionSuccess}</p>}
 
-        <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #eee' }}>
-          <p style={{ color: '#888', fontSize: '0.9rem' }}>
+        <div className="mt-15 pt-1 border-top">
+          <p className="text-muted text-small">
             Deleting the tournament will remove all matches, registrations and standings permanently.
           </p>
           <button
+            className="button-danger"
             onClick={handleDelete}
-            style={{ color: 'white', background: 'red', border: 'none', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer' }}
           >
             🗑️ Delete Tournament
           </button>
@@ -311,19 +311,19 @@ function TournamentOwnerPage() {
       </section>
 
       {/* Organizers de soporte */}
-      <section style={{ marginBottom: '2rem', padding: '1rem', border: '1px solid #ccc', borderRadius: '4px' }}>
+      <section className="card mb-15">
         <h2>Support Organizers</h2>
 
         {tournament.organizers.length === 0 ? (
-          <p style={{ color: '#888' }}>No support organizers yet.</p>
+          <p className="text-muted">No support organizers yet.</p>
         ) : (
-          <ul style={{ marginBottom: '1rem' }}>
+          <ul className="mb-1">
             {tournament.organizers.map(o => (
-              <li key={o.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+              <li key={o.id} className="flex flex-between align-center mb-05">
                 <span>{o.username} (ID: {o.id})</span>
                 <button
+                  className="button-danger"
                   onClick={() => handleRemoveOrganizer(o.id)}
-                  style={{ color: 'red' }}
                 >
                   Remove
                 </button>
@@ -333,20 +333,20 @@ function TournamentOwnerPage() {
         )}
 
         <form onSubmit={handleAddOrganizer}>
-          <p style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Add Support Organizer</p>
-          <div style={{ marginBottom: '0.5rem' }}>
-            <label style={{ fontSize: '0.9rem' }}>User ID</label><br />
+          <p className="section-title mb-05">Add Support Organizer</p>
+          <div className="form-group">
+            <label className="text-muted text-small">User ID</label><br />
             <input
               type="number"
               value={newOrganizerId}
               onChange={(e) => setNewOrganizerId(e.target.value)}
               placeholder="Enter user ID"
-              style={{ padding: '0.4rem', width: '200px' }}
+              className="form-control form-control-sm"
             />
           </div>
-          {orgError && <p style={{ color: 'red' }}>{orgError}</p>}
-          {orgSuccess && <p style={{ color: 'green' }}>{orgSuccess}</p>}
-          <button type="submit" disabled={orgLoading}>
+          {orgError && <p className="text-error">{orgError}</p>}
+          {orgSuccess && <p className="text-success">{orgSuccess}</p>}
+          <button type="submit" disabled={orgLoading} className="button">
             {orgLoading ? 'Adding...' : 'Add Organizer'}
           </button>
         </form>

@@ -31,10 +31,10 @@ function RegisterPage() {
   }
 
   return (
-    <div style={{ maxWidth: '400px', margin: '2rem auto', padding: '1rem' }}>
+    <div className="page-container-small">
       <h1>Register</h1>
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '1rem' }}>
+        <div className="form-group">
           <label>Username</label>
           <br />
           <input
@@ -44,7 +44,7 @@ function RegisterPage() {
             required
           />
         </div>
-        <div style={{ marginBottom: '1rem' }}>
+        <div className="form-group">
           <label>Email</label>
           <br />
           <input
@@ -54,7 +54,7 @@ function RegisterPage() {
             required
           />
         </div>
-        <div style={{ marginBottom: '1rem' }}>
+        <div className="form-group">
           <label>Password</label>
           <br />
           <input
@@ -64,7 +64,7 @@ function RegisterPage() {
             required
           />
         </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p className="text-error">{error}</p>}
         <button type="submit" disabled={loading}>
           {loading ? 'Loading...' : 'Register'}
         </button>

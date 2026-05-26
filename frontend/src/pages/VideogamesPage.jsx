@@ -99,56 +99,44 @@ function VideogamesPage() {
   }
 
   return (
-    <div style={{ maxWidth: '800px', margin: '2rem auto', padding: '1rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className="page-container-mid">
+      <div className="flex flex-between">
         <h1>Videogames</h1>
         {user?.role === 'admin' && (
           <button onClick={handleOpenCreate}>+ New Videogame</button>
         )}
       </div>
 
-      <div style={{ marginBottom: '1rem' }}>
+      <div className="form-group">
         <input
           type="text"
           placeholder="Search by name..."
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          style={{ width: '100%', padding: '0.5rem', boxSizing: 'border-box' }}
         />
       </div>
 
       {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="text-error">{error}</p>}
 
       {!loading && !error && filtered.length === 0 && (
         <p>No videogames found.</p>
       )}
 
       {!loading && !error && filtered.map(vg => (
-        <div
-          key={vg.id}
-          style={{
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            padding: '1rem',
-            marginBottom: '0.75rem',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start'
-          }}
-        >
+        <div key={vg.id} className="card flex flex-between align-start">
           <div>
             <strong>{vg.name}</strong>
             {vg.description && (
-              <p style={{ margin: '0.25rem 0 0', color: '#555' }}>{vg.description}</p>
+              <p className="text-muted mb-05">{vg.description}</p>
             )}
           </div>
           {user?.role === 'admin' && (
-            <div style={{ display: 'flex', gap: '0.5rem', marginLeft: '1rem' }}>
+            <div className="card-actions ml-1">
               <button onClick={() => handleOpenEdit(vg)}>Edit</button>
               <button
                 onClick={() => handleDelete(vg)}
-                style={{ color: 'red' }}
+                className="button-danger"
               >
                 Delete
               </button>
@@ -158,39 +146,29 @@ function VideogamesPage() {
       ))}
 
       {showForm && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0,0,0,0.4)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          zIndex: 1000
-        }}>
-          <div style={{
-            background: 'white', padding: '2rem', borderRadius: '8px',
-            minWidth: '320px', maxWidth: '480px', width: '100%'
-          }}>
+        <div className="modal-overlay">
+          <div className="modal">
             <h2>{editingVg ? 'Edit Videogame' : 'New Videogame'}</h2>
             <form onSubmit={handleSubmit}>
-              <div style={{ marginBottom: '1rem' }}>
+              <div className="form-group">
                 <label>Name *</label><br />
                 <input
                   type="text"
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
                   required
-                  style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
                 />
               </div>
-              <div style={{ marginBottom: '1rem' }}>
+              <div className="form-group">
                 <label>Description</label><br />
                 <textarea
                   value={formDescription}
                   onChange={(e) => setFormDescription(e.target.value)}
                   rows={3}
-                  style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
                 />
               </div>
-              {formError && <p style={{ color: 'red' }}>{formError}</p>}
-              <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+              {formError && <p className="text-error">{formError}</p>}
+              <div className="form-actions gap-05">
                 <button type="button" onClick={handleCloseForm} disabled={formLoading}>
                   Cancel
                 </button>

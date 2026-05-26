@@ -102,118 +102,109 @@ function ProfilePage() {
     return status
   }
 
-  if (loading) return <p style={{ padding: '2rem' }}>Loading...</p>
-  if (error) return <p style={{ padding: '2rem', color: 'red' }}>{error}</p>
+  if (loading) return <p className="page-container">Loading...</p>
+  if (error) return <p className="text-error page-container">{error}</p>
   if (!profile) return null
 
   return (
-    <div style={{ maxWidth: '800px', margin: '2rem auto', padding: '1rem' }}>
+    <div className="page-container-mid">
 
       {/* Cabecera del perfil */}
-      <div style={{
-        display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
-        marginBottom: '1.5rem'
-      }}>
+      <div className="flex flex-between align-start mb-15">
         <div>
-          <h1 style={{ marginBottom: '0.25rem' }}>{profile.username}</h1>
-          <p style={{ color: '#555', margin: 0 }}>
+          <h1 className="section-title">{profile.username}</h1>
+          <p className="text-muted m-0">
             Role: <strong>{profile.role}</strong>
           </p>
-          <p style={{ color: '#555', margin: '0.25rem 0 0' }}>
+          <p className="text-muted mt-05">
             Email: {profile.email}
           </p>
         </div>
         {(isOwnProfile || user?.role === 'admin') && (
-          <button onClick={handleOpenForm} style={{ padding: '0.5rem 1rem' }}>
+          <button className="button" onClick={handleOpenForm}>
             Edit Profile
           </button>
         )}
       </div>
 
       {/* Historial de partidas */}
-      <section>
+      <section className="section">
         <h2>Match History</h2>
         {profile.matches.length === 0 ? (
-          <p style={{ color: '#888' }}>No matches played yet.</p>
+          <p className="text-muted">No matches played yet.</p>
         ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid #ccc', textAlign: 'left' }}>
-                <th style={{ padding: '0.4rem' }}>Match ID</th>
-                <th style={{ padding: '0.4rem' }}>Tournament</th>
-                <th style={{ padding: '0.4rem' }}>Round</th>
-                <th style={{ padding: '0.4rem' }}>Score</th>
-                <th style={{ padding: '0.4rem' }}>Result</th>
-                <th style={{ padding: '0.4rem' }}>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {profile.matches.map(m => {
-                const isPlayer1 = m.player1_id === profile.id
-                const myScore = isPlayer1 ? m.score_player1 : m.score_player2
-                const theirScore = isPlayer1 ? m.score_player2 : m.score_player1
-                const isWinner = m.winner_id === profile.id
-                const isCompleted = m.status === 'completed'
+          <div className="table-responsive">
+            <table className="table table-compact">
+              <thead>
+                <tr>
+                  <th>Match ID</th>
+                  <th>Tournament</th>
+                  <th>Round</th>
+                  <th>Score</th>
+                  <th>Result</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {profile.matches.map(m => {
+                  const isPlayer1 = m.player1_id === profile.id
+                  const myScore = isPlayer1 ? m.score_player1 : m.score_player2
+                  const theirScore = isPlayer1 ? m.score_player2 : m.score_player1
+                  const isWinner = m.winner_id === profile.id
+                  const isCompleted = m.status === 'completed'
 
-                return (
-                  <tr key={m.id} style={{ borderBottom: '1px solid #eee' }}>
-                    <td style={{ padding: '0.4rem' }}>#{m.id}</td>
-                    <td style={{ padding: '0.4rem' }}>#{m.tournament_id}</td>
-                    <td style={{ padding: '0.4rem' }}>{m.round || '—'}</td>
-                    <td style={{ padding: '0.4rem' }}>
-                      {myScore !== null && theirScore !== null
-                        ? `${myScore} - ${theirScore}`
-                        : '—'}
-                    </td>
-                    <td style={{ padding: '0.4rem' }}>
-                      {isCompleted
-                        ? isWinner ? '🏆 Win' : '❌ Loss'
-                        : '—'}
-                    </td>
-                    <td style={{ padding: '0.4rem' }}>{matchStatusLabel(m.status)}</td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+                  return (
+                    <tr key={m.id}>
+                      <td>#{m.id}</td>
+                      <td>#{m.tournament_id}</td>
+                      <td>{m.round || '—'}</td>
+                      <td>
+                        {myScore !== null && theirScore !== null
+                          ? `${myScore} - ${theirScore}`
+                          : '—'}
+                      </td>
+                      <td>
+                        {isCompleted
+                          ? isWinner ? '🏆 Win' : '❌ Loss'
+                          : '—'}
+                      </td>
+                      <td>{matchStatusLabel(m.status)}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
         )}
       </section>
 
       {/* Modal de edición */}
       {showForm && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0,0,0,0.4)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          zIndex: 1000
-        }}>
-          <div style={{
-            background: 'white', padding: '2rem', borderRadius: '8px',
-            minWidth: '320px', maxWidth: '480px', width: '100%'
-          }}>
+        <div className="modal-overlay">
+          <div className="modal">
             <h2>Edit Profile</h2>
             <form onSubmit={handleSubmit}>
-              <div style={{ marginBottom: '1rem' }}>
+              <div className="form-group">
                 <label>Email</label><br />
                 <input
                   type="email"
                   value={formEmail}
                   onChange={(e) => setFormEmail(e.target.value)}
-                  style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
+                  className="form-control"
                 />
               </div>
-              <div style={{ marginBottom: '1rem' }}>
-                <label>New Password <span style={{ color: '#888', fontSize: '0.85rem' }}>(leave blank to keep current)</span></label><br />
+              <div className="form-group">
+                <label>New Password <span className="text-muted text-small">(leave blank to keep current)</span></label><br />
                 <input
                   type="password"
                   value={formPassword}
                   onChange={(e) => setFormPassword(e.target.value)}
-                  style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
+                  className="form-control"
                 />
               </div>
-              {formError && <p style={{ color: 'red' }}>{formError}</p>}
-              {formSuccess && <p style={{ color: 'green' }}>{formSuccess}</p>}
-              <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+              {formError && <p className="text-error">{formError}</p>}
+              {formSuccess && <p className="text-success">{formSuccess}</p>}
+              <div className="form-actions">
                 <button type="button" onClick={handleCloseForm} disabled={formLoading}>
                   Cancel
                 </button>

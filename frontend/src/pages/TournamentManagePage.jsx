@@ -102,10 +102,10 @@ function TournamentManagePage() {
     return status
   }
 
-  if (loading) return <p style={{ padding: '2rem' }}>Loading...</p>
-  if (error) return <p style={{ padding: '2rem', color: 'red' }}>{error}</p>
+  if (loading) return <p className="page-container">Loading...</p>
+  if (error) return <p className="text-error page-container">{error}</p>
   if (!tournament) return null
-  if (!isOrganizerOf) return <p style={{ padding: '2rem', color: 'red' }}>403 - Forbidden</p>
+  if (!isOrganizerOf) return <p className="text-error page-container">403 - Forbidden</p>
 
   const approvedPlayers = tournament.players.filter(p => p.status === 'approved')
   const pendingPlayers = tournament.players.filter(p => p.status === 'pending')
@@ -114,24 +114,24 @@ function TournamentManagePage() {
   const pendingMatches = tournament.matches.filter(m => m.status === 'pending')
 
   return (
-    <div style={{ maxWidth: '900px', margin: '2rem auto', padding: '1rem' }}>
+    <div className="page-container">
 
       {/* Cabecera */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+      <div className="flex flex-between align-center mb-1">
         <div>
           <h1>{tournament.name} — Manage</h1>
-          <p style={{ color: '#555', margin: 0 }}>
+          <p className="text-muted m-0">
             Status: <strong>{tournament.status}</strong> ·
             Type: <strong>{tournament.type}</strong> ·
             Max players: <strong>{tournament.max_players}</strong>
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button onClick={() => navigate(`/tournaments/${id}`)}>
+        <div className="card-actions">
+          <button className="button" onClick={() => navigate(`/tournaments/${id}`)}>
             View Public Page
           </button>
           {(isOwner || user.role === 'admin') && (
-            <button onClick={() => navigate(`/tournaments/${id}/owner`)}>
+            <button className="button" onClick={() => navigate(`/tournaments/${id}/owner`)}>
               Owner Settings
             </button>
           )}
@@ -140,49 +140,47 @@ function TournamentManagePage() {
 
       {/* Jugadores pendientes de aprobación */}
       {tournament.status === 'planned' && (
-        <section style={{ marginBottom: '2rem' }}>
+        <section className="section">
           <h2>Pending Registrations ({pendingPlayers.length})</h2>
           {pendingPlayers.length === 0 ? (
-            <p style={{ color: '#888' }}>No pending registrations.</p>
+            <p className="text-muted">No pending registrations.</p>
           ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid #ccc', textAlign: 'left' }}>
-                  <th style={{ padding: '0.4rem' }}>Username</th>
-                  <th style={{ padding: '0.4rem' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pendingPlayers.map(p => (
-                  <tr key={p.id} style={{ borderBottom: '1px solid #eee' }}>
-                    <td style={{ padding: '0.4rem' }}>{p.username}</td>
-                    <td style={{ padding: '0.4rem', display: 'flex', gap: '0.5rem' }}>
-                      <button
-                        onClick={() => handlePlayerStatus(p.id, 'approved')}
-                        style={{ color: 'green' }}
-                      >
-                        Approve
-                      </button>
-                      <button
-                        onClick={() => handlePlayerStatus(p.id, 'rejected')}
-                        style={{ color: 'red' }}
-                      >
-                        Reject
-                      </button>
-                    </td>
+            <div className="table-responsive">
+              <table className="table table-compact">
+                <thead>
+                  <tr>
+                    <th>Username</th>
+                    <th>Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {pendingPlayers.map(p => (
+                    <tr key={p.id}>
+                      <td>{p.username}</td>
+                      <td>
+                        <div className="card-actions">
+                          <button className="text-green" onClick={() => handlePlayerStatus(p.id, 'approved')}>
+                            Approve
+                          </button>
+                          <button className="text-red" onClick={() => handlePlayerStatus(p.id, 'rejected')}>
+                            Reject
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </section>
       )}
 
       {/* Jugadores aprobados */}
-      <section style={{ marginBottom: '2rem' }}>
+      <section className="section">
         <h2>Approved Players ({approvedPlayers.length} / {tournament.max_players})</h2>
         {approvedPlayers.length === 0 ? (
-          <p style={{ color: '#888' }}>No approved players yet.</p>
+          <p className="text-muted">No approved players yet.</p>
         ) : (
           <ul>
             {approvedPlayers.map(p => (
@@ -194,15 +192,15 @@ function TournamentManagePage() {
 
       {/* Partidas pendientes de asignación */}
       {pendingMatches.length > 0 && (
-        <section style={{ marginBottom: '2rem' }}>
+        <section className="section">
           <h2>Pending Matches ({pendingMatches.length})</h2>
-          <p style={{ color: '#888' }}>These matches will be assigned when the tournament starts.</p>
+          <p className="text-muted">These matches will be assigned when the tournament starts.</p>
         </section>
       )}
 
       {/* Partidas asignadas — introducir resultados */}
       {assignedMatches.length > 0 && (
-        <section style={{ marginBottom: '2rem' }}>
+        <section className="section">
           <h2>Matches to Play ({assignedMatches.length})</h2>
           {assignedMatches.map(m => {
             const p1 = tournament.players.find(p => p.id === m.player1_id)
@@ -210,18 +208,15 @@ function TournamentManagePage() {
             const inputs = matchInputs[m.id] || {}
 
             return (
-              <div key={m.id} style={{
-                border: '1px solid #ccc', borderRadius: '4px',
-                padding: '1rem', marginBottom: '0.75rem'
-              }}>
-                <p style={{ margin: '0 0 0.5rem', fontWeight: 'bold' }}>
+              <div key={m.id} className="card">
+                <p className="text-muted mb-05 font-bold">
                   {m.round || 'Match'} — {p1?.username || '?'} vs {p2?.username || '?'}
                 </p>
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                <div className="flex gap-05 flex-wrap align-center">
                   <select
                     value={inputs.winner_id || ''}
                     onChange={(e) => handleMatchInputChange(m.id, 'winner_id', e.target.value)}
-                    style={{ padding: '0.4rem' }}
+                    className="form-control form-control-sm"
                   >
                     <option value="">Select winner</option>
                     {p1 && <option value={p1.id}>{p1.username}</option>}
@@ -232,7 +227,7 @@ function TournamentManagePage() {
                     placeholder={`${p1?.username || 'P1'} score`}
                     value={inputs.score_player1 || ''}
                     onChange={(e) => handleMatchInputChange(m.id, 'score_player1', e.target.value)}
-                    style={{ padding: '0.4rem', width: '120px' }}
+                    className="form-control form-control-sm"
                     min={0}
                   />
                   <input
@@ -240,18 +235,18 @@ function TournamentManagePage() {
                     placeholder={`${p2?.username || 'P2'} score`}
                     value={inputs.score_player2 || ''}
                     onChange={(e) => handleMatchInputChange(m.id, 'score_player2', e.target.value)}
-                    style={{ padding: '0.4rem', width: '120px' }}
+                    className="form-control form-control-sm"
                     min={0}
                   />
-                  <button onClick={() => handleMatchSubmit(m)}>
+                  <button className="button" onClick={() => handleMatchSubmit(m)}>
                     Save Result
                   </button>
                 </div>
                 {matchErrors[m.id] && (
-                  <p style={{ color: 'red', margin: '0.25rem 0 0' }}>{matchErrors[m.id]}</p>
+                  <p className="text-error mt-05">{matchErrors[m.id]}</p>
                 )}
                 {matchSuccess[m.id] && (
-                  <p style={{ color: 'green', margin: '0.25rem 0 0' }}>{matchSuccess[m.id]}</p>
+                  <p className="text-success mt-05">{matchSuccess[m.id]}</p>
                 )}
               </div>
             )
@@ -261,40 +256,42 @@ function TournamentManagePage() {
 
       {/* Partidas completadas */}
       {completedMatches.length > 0 && (
-        <section style={{ marginBottom: '2rem' }}>
+        <section className="section">
           <h2>Completed Matches ({completedMatches.length})</h2>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid #ccc', textAlign: 'left' }}>
-                <th style={{ padding: '0.4rem' }}>Round</th>
-                <th style={{ padding: '0.4rem' }}>Player 1</th>
-                <th style={{ padding: '0.4rem' }}>Player 2</th>
-                <th style={{ padding: '0.4rem' }}>Score</th>
-                <th style={{ padding: '0.4rem' }}>Winner</th>
-                <th style={{ padding: '0.4rem' }}>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {completedMatches.map(m => {
-                const p1 = tournament.players.find(p => p.id === m.player1_id)
-                const p2 = tournament.players.find(p => p.id === m.player2_id)
-                const winner = tournament.players.find(p => p.id === m.winner_id)
-                return (
-                  <tr key={m.id} style={{ borderBottom: '1px solid #eee' }}>
-                    <td style={{ padding: '0.4rem' }}>{m.round || '—'}</td>
-                    <td style={{ padding: '0.4rem' }}>{p1?.username || '—'}</td>
-                    <td style={{ padding: '0.4rem' }}>{p2?.username || '—'}</td>
-                    <td style={{ padding: '0.4rem' }}>
-                      {m.score_player1 !== null && m.score_player2 !== null
-                        ? `${m.score_player1} - ${m.score_player2}` : '—'}
-                    </td>
-                    <td style={{ padding: '0.4rem' }}>{winner?.username || '—'}</td>
-                    <td style={{ padding: '0.4rem' }}>{matchStatusLabel(m.status)}</td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+          <div className="table-responsive">
+            <table className="table table-compact">
+              <thead>
+                <tr>
+                  <th>Round</th>
+                  <th>Player 1</th>
+                  <th>Player 2</th>
+                  <th>Score</th>
+                  <th>Winner</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {completedMatches.map(m => {
+                  const p1 = tournament.players.find(p => p.id === m.player1_id)
+                  const p2 = tournament.players.find(p => p.id === m.player2_id)
+                  const winner = tournament.players.find(p => p.id === m.winner_id)
+                  return (
+                    <tr key={m.id}>
+                      <td>{m.round || '—'}</td>
+                      <td>{p1?.username || '—'}</td>
+                      <td>{p2?.username || '—'}</td>
+                      <td>
+                        {m.score_player1 !== null && m.score_player2 !== null
+                          ? `${m.score_player1} - ${m.score_player2}` : '—'}
+                      </td>
+                      <td>{winner?.username || '—'}</td>
+                      <td>{matchStatusLabel(m.status)}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
         </section>
       )}
 

@@ -54,27 +54,27 @@ function UsersPage() {
   }
 
   return (
-    <div style={{ maxWidth: '900px', margin: '2rem auto', padding: '1rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+    <div className="page-container">
+      <div className="flex flex-between mb-1">
         <h1>Users</h1>
-        <button onClick={() => navigate('/users/new')}>
+        <button className="button" onClick={() => navigate('/users/new')}>
           + New User
         </button>
       </div>
 
       {/* Filtros */}
-      <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+      <div className="flex gap-1 mb-15 flex-wrap">
         <input
           type="text"
           placeholder="Search by username..."
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          style={{ flex: 1, minWidth: '160px', padding: '0.5rem' }}
+          className="form-control"
         />
         <select
           value={filterRole}
           onChange={(e) => setFilterRole(e.target.value)}
-          style={{ flex: 1, minWidth: '140px', padding: '0.5rem' }}
+          className="form-control"
         >
           <option value="">All roles</option>
           <option value="admin">Admin</option>
@@ -84,49 +84,51 @@ function UsersPage() {
       </div>
 
       {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="text-error">{error}</p>}
 
       {!loading && !error && filtered.length === 0 && (
         <p>No users found.</p>
       )}
 
       {!loading && !error && (
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ borderBottom: '2px solid #ccc', textAlign: 'left' }}>
-              <th style={{ padding: '0.5rem' }}>ID</th>
-              <th style={{ padding: '0.5rem' }}>Username</th>
-              <th style={{ padding: '0.5rem' }}>Email</th>
-              <th style={{ padding: '0.5rem' }}>Role</th>
-              <th style={{ padding: '0.5rem' }}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map(u => (
-              <tr key={u.id} style={{ borderBottom: '1px solid #eee' }}>
-                <td style={{ padding: '0.5rem', color: '#888' }}>#{u.id}</td>
-                <td style={{ padding: '0.5rem' }}>
-                  <strong>{u.username}</strong>
-                </td>
-                <td style={{ padding: '0.5rem' }}>{u.email}</td>
-                <td style={{ padding: '0.5rem' }}>{roleLabel(u.role)}</td>
-                <td style={{ padding: '0.5rem' }}>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button onClick={() => navigate(`/profile/${u.username}`)}>
-                      View
-                    </button>
-                    <button
-                      onClick={() => handleDelete(u)}
-                      style={{ color: 'red' }}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
+        <div className="table-responsive">
+          <table className="table table-compact">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filtered.map(u => (
+                <tr key={u.id}>
+                  <td className="text-muted">#{u.id}</td>
+                  <td>
+                    <strong>{u.username}</strong>
+                  </td>
+                  <td>{u.email}</td>
+                  <td>{roleLabel(u.role)}</td>
+                  <td>
+                    <div className="card-actions">
+                      <button onClick={() => navigate(`/profile/${u.username}`)}>
+                        View
+                      </button>
+                      <button
+                        onClick={() => handleDelete(u)}
+                        className="button-danger"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   )

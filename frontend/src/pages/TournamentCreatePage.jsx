@@ -65,46 +65,43 @@ function TournamentCreatePage() {
   }
 
   return (
-    <div style={{ maxWidth: '600px', margin: '2rem auto', padding: '1rem' }}>
+    <div className="page-container-mid">
       <h1>Create Tournament</h1>
 
       {loadingVg && <p>Loading videogames...</p>}
 
       {!loadingVg && videogames.length === 0 && (
-        <p style={{ color: 'red' }}>No videogames available. Ask an admin to create one first.</p>
+        <p className="text-error">No videogames available. Ask an admin to create one first.</p>
       )}
 
       {!loadingVg && videogames.length > 0 && (
         <form onSubmit={handleSubmit}>
 
-          <div style={{ marginBottom: '1rem' }}>
+          <div className="form-group">
             <label>Name *</label><br />
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
             />
           </div>
 
-          <div style={{ marginBottom: '1rem' }}>
+          <div className="form-group">
             <label>Description</label><br />
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
             />
           </div>
 
-          <div style={{ marginBottom: '1rem' }}>
+          <div className="form-group">
             <label>Videogame *</label><br />
             <select
               value={videogameId}
               onChange={(e) => setVideogameId(e.target.value)}
               required
-              style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
             >
               {videogames.map(vg => (
                 <option key={vg.id} value={vg.id}>{vg.name}</option>
@@ -112,42 +109,39 @@ function TournamentCreatePage() {
             </select>
           </div>
 
-          <div style={{ marginBottom: '1rem' }}>
+          <div className="form-group">
             <label>Type *</label><br />
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
               required
-              style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
             >
               <option value="elimination">Elimination</option>
               <option value="league">League</option>
             </select>
           </div>
 
-          <div style={{ marginBottom: '1rem' }}>
+          <div className="form-group">
             <label>Start Date *</label><br />
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
               required
-              style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
             />
           </div>
 
-          <div style={{ marginBottom: '1rem' }}>
-            <label>End Date <span style={{ color: '#888', fontSize: '0.85rem' }}>(optional)</span></label><br />
+          <div className="form-group">
+            <label>End Date <span className="text-muted text-small">(optional)</span></label><br />
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
             />
           </div>
 
-          <div style={{ marginBottom: '1rem' }}>
-            <label>Max Players * <span style={{ color: '#888', fontSize: '0.85rem' }}>(must be a power of 2 for elimination)</span></label><br />
+          <div className="form-group">
+            <label>Max Players * <span className="text-muted text-small">(must be a power of 2 for elimination)</span></label><br />
             <input
               type="number"
               value={maxPlayers}
@@ -155,13 +149,12 @@ function TournamentCreatePage() {
               min={2}
               max={64}
               required
-              style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
             />
           </div>
 
-          {error && <p style={{ color: 'red' }}>{error}</p>}
+          {error && <p className="text-error">{error}</p>}
 
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <div className="form-actions gap-05">
             <button
               type="button"
               onClick={() => navigate('/tournaments')}

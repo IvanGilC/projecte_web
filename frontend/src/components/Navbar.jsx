@@ -11,7 +11,7 @@ function Navbar() {
   }
 
   return (
-    <nav style={{ display: 'flex', gap: '1rem', padding: '1rem', borderBottom: '1px solid #ccc' }}>
+    <nav className="navbar">
       <Link to="/">Home</Link>
       <Link to="/videogames">Videogames</Link>
       <Link to="/tournaments">Tournaments</Link>
@@ -28,7 +28,7 @@ function Navbar() {
           <Link to={`/profile/${user.username}`}>Profile ({user.role})</Link>
 
           {user.role === 'player' && (
-            <Link to={`/profile/${user.username}`}>My Registrations</Link>
+            <Link to="/my-registrations">My Registrations</Link>
           )}
 
           {user.role === 'organizer' && (

@@ -27,50 +27,46 @@ function UserCreatePage() {
   }
 
   return (
-    <div style={{ maxWidth: '500px', margin: '2rem auto', padding: '1rem' }}>
+    <div className="page-container-small">
       <h1>Create User</h1>
       <form onSubmit={handleSubmit}>
 
-        <div style={{ marginBottom: '1rem' }}>
+        <div className="form-group">
           <label>Username *</label><br />
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
-            style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
           />
         </div>
 
-        <div style={{ marginBottom: '1rem' }}>
+        <div className="form-group">
           <label>Email *</label><br />
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
           />
         </div>
 
-        <div style={{ marginBottom: '1rem' }}>
+        <div className="form-group">
           <label>Password *</label><br />
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
           />
         </div>
 
-        <div style={{ marginBottom: '1rem' }}>
+        <div className="form-group">
           <label>Role *</label><br />
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
             required
-            style={{ width: '100%', padding: '0.4rem', boxSizing: 'border-box' }}
           >
             <option value="player">Player</option>
             <option value="organizer">Organizer</option>
@@ -78,9 +74,9 @@ function UserCreatePage() {
           </select>
         </div>
 
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p className="text-error">{error}</p>}
 
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div className="form-actions gap-05">
           <button
             type="button"
             onClick={() => navigate('/users')}
