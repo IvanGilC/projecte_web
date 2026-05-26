@@ -9,7 +9,10 @@ import TournamentsPage from './pages/TournamentsPage'
 import TournamentDetailPage from './pages/TournamentDetailPage'
 import TournamentCreatePage from './pages/TournamentCreatePage'
 import TournamentManagePage from './pages/TournamentManagePage'
+import TournamentOwnerPage from './pages/TournamentOwnerPage'
 import ProfilePage from './pages/ProfilePage'
+import UsersPage from './pages/UsersPage'
+import UserCreatePage from './pages/UserCreatePage'
 import NotFoundPage from './pages/NotFoundPage'
 
 function App() {
@@ -33,9 +36,24 @@ function App() {
             <TournamentManagePage />
           </ProtectedRoute>
         } />
+        <Route path="/tournaments/:id/owner" element={
+          <ProtectedRoute roles={['organizer', 'admin']}>
+            <TournamentOwnerPage />
+          </ProtectedRoute>
+        } />
         <Route path="/profile/:username" element={
           <ProtectedRoute>
             <ProfilePage />
+          </ProtectedRoute>
+        } />
+        <Route path="/users" element={
+          <ProtectedRoute roles={['admin']}>
+            <UsersPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/users/new" element={
+          <ProtectedRoute roles={['admin']}>
+            <UserCreatePage />
           </ProtectedRoute>
         } />
         <Route path="*" element={<NotFoundPage />} />
