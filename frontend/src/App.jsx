@@ -9,7 +9,6 @@ import TournamentsPage from './pages/TournamentsPage'
 import TournamentDetailPage from './pages/TournamentDetailPage'
 import TournamentCreatePage from './pages/TournamentCreatePage'
 import TournamentManagePage from './pages/TournamentManagePage'
-import TournamentOwnerPage from './pages/TournamentOwnerPage'
 import ProfilePage from './pages/ProfilePage'
 import UsersPage from './pages/UsersPage'
 import UserCreatePage from './pages/UserCreatePage'
@@ -42,12 +41,6 @@ function App() {
         <Route path="/tournaments/:id/manage" element={
           <ProtectedRoute roles={['organizer', 'admin']}>
             <TournamentManagePage />
-          </ProtectedRoute>
-        } />
-
-        <Route path="/tournaments/:id/owner" element={
-          <ProtectedRoute roles={['organizer', 'admin']}>
-            <TournamentOwnerPage />
           </ProtectedRoute>
         } />
 

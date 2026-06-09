@@ -53,6 +53,12 @@ function TournamentsPage() {
     return status
   }
 
+  const registrationLabel = (open) => {
+    if (open === 1) return '🟢 Open'
+    if (open === 0) return '🔴 Closed'
+    return '—'
+  }
+
   const videogameName = (id) => {
     const vg = videogames.find(v => v.id === id)
     return vg ? vg.name : '—'
@@ -109,6 +115,7 @@ function TournamentsPage() {
             <div className="meta-inline text-muted text-small mt-05">
               <span>{videogameName(t.videogame_id)}</span>
               <span>{statusLabel(t.status)}</span>
+              <span>Registrations: {registrationLabel(t.registrations_open)}</span>
               <span>Max players: {t.max_players}</span>
               <span>Start: {t.start_date}</span>
             </div>

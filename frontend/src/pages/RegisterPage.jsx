@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { Navigate, useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/useAuth.js'
 import { register as registerService, login as loginService } from '../services/authService.js'
 
@@ -10,7 +10,7 @@ function RegisterPage() {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  const { login } = useAuth()
+  const { user, login } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
@@ -30,9 +30,14 @@ function RegisterPage() {
     }
   }
 
+  if (user) {
+    return <Navigate to="/" replace />
+  }
+
   return (
     <div className="page-container-small">
       <h1>Register</h1>
+      <p className="text-muted text-small">This form creates a player account.</p>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Username</label>

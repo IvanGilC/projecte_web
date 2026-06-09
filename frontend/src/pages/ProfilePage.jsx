@@ -71,16 +71,21 @@ function ProfilePage() {
     }
 
     try {
-      await updateUser(profile.id, updates)
+      const res = await updateUser(profile.id, updates)
       setFormSuccess('Profile updated successfully.')
-      // Si es el propio usuario actualizamos el contexto de auth
+      // Si es el propio usuario actualizamos el contexto de auth y localStorage
       if (isOwnProfile) {
-        login({
+        const updated = res.data
+        const newAuth = {
           token: user.token,
-          id: user.id,
-          username: user.username,
-          role: user.role
-        })
+          id: updated.id ?? user.id,
+          username: updated.username ?? user.username,
+          role: updated.role ?? user.role
+        }
+        if (newAuth.username) localStorage.setItem('username', newAuth.username)
+        if (newAuth.role) localStorage.setItem('role', newAuth.role)
+        if (newAuth.id) localStorage.setItem('id', newAuth.id)
+        login(newAuth)
       }
       setRefresh(r => r + 1)
       // Cerramos el form tras un momento

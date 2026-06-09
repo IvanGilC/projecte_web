@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useAuth } from '../context/useAuth.js'
 import { getTournamentById, registerToTournament } from '../services/tournamentsService.js'
+import { getVideogameById } from '../services/videogamesService.js'
 
 // Componente árbol de eliminatoria
 function EliminationBracket({ matches, players }) {
@@ -126,6 +127,7 @@ function TournamentDetailPage() {
   const { id } = useParams()
   const { user } = useAuth()
   const [tournament, setTournament] = useState(null)
+  const [videogame, setVideogame] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [registerMsg, setRegisterMsg] = useState(null)
@@ -152,6 +154,23 @@ function TournamentDetailPage() {
     load()
     return () => { cancelled = true }
   }, [id, refresh])
+
+  useEffect(() => {
+    let cancelled = false
+
+    const loadVideogame = async () => {
+      if (!tournament) return
+      try {
+        const res = await getVideogameById(tournament.videogame_id)
+        if (!cancelled) setVideogame(res.data)
+      } catch {
+        if (!cancelled) setVideogame(null)
+      }
+    }
+
+    loadVideogame()
+    return () => { cancelled = true }
+  }, [tournament])
 
   const handleRegister = async () => {
     setRegisterMsg(null)
@@ -202,6 +221,7 @@ function TournamentDetailPage() {
       <h1>{tournament.name}</h1>
       <div className="meta-inline text-muted mb-1">
         <span>{statusLabel(tournament.status)}</span>
+        <span>Videogame: {videogame?.name || '—'}</span>
         <span>Type: {tournament.type}</span>
         <span>Max players: {tournament.max_players}</span>
         <span>Start: {tournament.start_date}</span>
