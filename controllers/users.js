@@ -79,6 +79,30 @@ usersRouter.delete('/:id', requireAuth, requireRole('admin'), (req, res, next) =
   } catch (err) { next(err) }
 })
 
-
+// GET /api/users/:id/registrations — el propio usuario o admin
+// NUEVO: devuelve los torneos en los que está inscrito el usuario con su estado
+usersRouter.get('/:id/registrations', requireAuth, (req, res, next) => {
+  try {
+    const targetId = Number(req.params.id)
+    if (req.user.id !== targetId && req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'forbidden' })
+    }
+    const registrations = usersModel.getRegistrationsByUser(targetId)
+    res.json(registrations)
+  } catch (err) { next(err) }
+})
+ 
+// GET /api/users/:id/tournaments — el propio organizador o admin
+// NUEVO: devuelve los torneos de los que el usuario es propietario
+usersRouter.get('/:id/tournaments', requireAuth, requireRole('organizer', 'admin'), (req, res, next) => {
+  try {
+    const targetId = Number(req.params.id)
+    if (req.user.id !== targetId && req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'forbidden' })
+    }
+    const tournaments = usersModel.getTournamentsByOwner(targetId)
+    res.json(tournaments)
+  } catch (err) { next(err) }
+})
 
 module.exports = usersRouter

@@ -13,6 +13,8 @@ import TournamentOwnerPage from './pages/TournamentOwnerPage'
 import ProfilePage from './pages/ProfilePage'
 import UsersPage from './pages/UsersPage'
 import UserCreatePage from './pages/UserCreatePage'
+import MyRegistrationsPage from './pages/MyRegistrationsPage'
+import MyTournamentsPage from './pages/MyTournamentsPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 function App() {
@@ -25,37 +27,56 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/videogames" element={<VideogamesPage />} />
         <Route path="/tournaments" element={<TournamentsPage />} />
+
         <Route path="/tournaments/new" element={
           <ProtectedRoute roles={['organizer']}>
             <TournamentCreatePage />
           </ProtectedRoute>
         } />
+
+        {/* MODIFICADO: perfil ahora es público, sin ProtectedRoute */}
+        <Route path="/profile/:username" element={<ProfilePage />} />
+
         <Route path="/tournaments/:id" element={<TournamentDetailPage />} />
+
         <Route path="/tournaments/:id/manage" element={
           <ProtectedRoute roles={['organizer', 'admin']}>
             <TournamentManagePage />
           </ProtectedRoute>
         } />
+
         <Route path="/tournaments/:id/owner" element={
           <ProtectedRoute roles={['organizer', 'admin']}>
             <TournamentOwnerPage />
           </ProtectedRoute>
         } />
-        <Route path="/profile/:username" element={
-          <ProtectedRoute>
-            <ProfilePage />
+
+        {/* NUEVO: mis inscripciones (solo jugadores) */}
+        <Route path="/my-registrations" element={
+          <ProtectedRoute roles={['player']}>
+            <MyRegistrationsPage />
           </ProtectedRoute>
         } />
+
+        {/* NUEVO: mis torneos (solo organizadores) */}
+        <Route path="/my-tournaments" element={
+          <ProtectedRoute roles={['organizer']}>
+            <MyTournamentsPage />
+          </ProtectedRoute>
+        } />
+
         <Route path="/users" element={
           <ProtectedRoute roles={['admin']}>
             <UsersPage />
           </ProtectedRoute>
         } />
+
         <Route path="/users/new" element={
           <ProtectedRoute roles={['admin']}>
             <UserCreatePage />
           </ProtectedRoute>
         } />
+
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

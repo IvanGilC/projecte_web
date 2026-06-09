@@ -44,4 +44,35 @@ const getMatchesByUser = (user_id) => {
   `).all(user_id, user_id)
 }
 
-module.exports = { getAllUsers, getUserById, getUserByUsername, createUser, updateUser, deleteUser, getMatchesByUser }
+
+//Nuevo endpoint para para la Practica 2
+
+const getRegistrationsByUser = (user_id) => {
+  return db.prepare(`
+    SELECT t.id, t.name, t.status, t.type, t.start_date, t.videogame_id,
+           tp.status as registration_status
+    FROM tournament_players tp
+    JOIN tournaments t ON t.id = tp.tournament_id
+    WHERE tp.user_id = ?
+    ORDER BY t.start_date DESC
+  `).all(user_id)
+}
+ 
+const getTournamentsByOwner = (owner_id) => {
+  return db.prepare(`
+    SELECT * FROM tournaments WHERE owner_id = ?
+    ORDER BY start_date DESC
+  `).all(owner_id)
+}
+
+module.exports = {
+  getAllUsers,
+  getUserById,
+  getUserByUsername,
+  createUser,
+  updateUser,
+  deleteUser,
+  getMatchesByUser,
+  getRegistrationsByUser,
+  getTournamentsByOwner
+}
