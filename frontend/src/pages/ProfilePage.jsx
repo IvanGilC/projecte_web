@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAuth } from '../context/useAuth.js'
 import { getUserByUsername, updateUser } from '../services/usersService.js'
+import NotFoundPage from './NotFoundPage.jsx'
 
 function ProfilePage() {
   const { username } = useParams()
@@ -9,6 +10,7 @@ function ProfilePage() {
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [notFound, setNotFound] = useState(false)
   const [refresh, setRefresh] = useState(0)
 
   // Formulario de edición
@@ -25,10 +27,18 @@ function ProfilePage() {
     const load = async () => {
       try {
         setLoading(true)
+        setError(null)
+        setNotFound(false)
         const res = await getUserByUsername(username)
         if (!cancelled) setProfile(res.data)
       } catch (err) {
-        if (!cancelled) setError(err.response?.data?.error || 'User not found')
+        if (!cancelled) {
+          if (err.response?.status === 404) {
+            setNotFound(true)
+          } else {
+            setError(err.response?.data?.error || 'User not found')
+          }
+        }
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -108,6 +118,7 @@ function ProfilePage() {
   }
 
   if (loading) return <p className="page-container">Loading...</p>
+  if (notFound) return <NotFoundPage />
   if (error) return <p className="text-error page-container">{error}</p>
   if (!profile) return null
 
