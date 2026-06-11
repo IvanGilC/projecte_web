@@ -9,18 +9,26 @@ function UserCreatePage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [role, setRole] = useState('player')
+  const [usernameError, setUsernameError] = useState(false)
+  const [emailError, setEmailError] = useState(false)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError(null)
+    setUsernameError(false)
+    setEmailError(false)
     setLoading(true)
     try {
       await createUser({ username, email, password, role })
       navigate('/users')
     } catch (err) {
-      setError(err.response?.data?.error || 'Error creating user')
+      const message = err.response?.data?.error || 'Error creating user'
+      setError(message)
+      const lower = message.toLowerCase()
+      setUsernameError(lower.includes('username'))
+      setEmailError(lower.includes('email'))
     } finally {
       setLoading(false)
     }
@@ -36,7 +44,11 @@ function UserCreatePage() {
           <input
             type="text"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => {
+              setUsername(e.target.value)
+              setUsernameError(false)
+            }}
+            className={usernameError ? 'input-error' : ''}
             required
           />
         </div>
@@ -46,7 +58,11 @@ function UserCreatePage() {
           <input
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value)
+              setEmailError(false)
+            }}
+            className={emailError ? 'input-error' : ''}
             required
           />
         </div>

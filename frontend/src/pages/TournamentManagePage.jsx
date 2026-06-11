@@ -31,11 +31,15 @@ function TournamentManagePage() {
   const [editEndDate, setEditEndDate] = useState('')
   const [editError, setEditError] = useState(null)
   const [editSuccess, setEditSuccess] = useState(null)
+  const [editNameError, setEditNameError] = useState(false)
+  const [editStartDateError, setEditStartDateError] = useState(false)
+  const [editEndDateError, setEditEndDateError] = useState(false)
   const [editLoading, setEditLoading] = useState(false)
 
   const [newOrganizerUsername, setNewOrganizerUsername] = useState('')
   const [orgError, setOrgError] = useState(null)
   const [orgSuccess, setOrgSuccess] = useState(null)
+  const [orgInputError, setOrgInputError] = useState(false)
   const [orgLoading, setOrgLoading] = useState(false)
 
   const [actionError, setActionError] = useState(null)
@@ -81,6 +85,9 @@ function TournamentManagePage() {
     e.preventDefault()
     setEditError(null)
     setEditSuccess(null)
+    setEditNameError(false)
+    setEditStartDateError(false)
+    setEditEndDateError(false)
     setEditLoading(true)
     try {
       await updateTournament(id, {
@@ -92,7 +99,12 @@ function TournamentManagePage() {
       setEditSuccess('Tournament updated successfully.')
       setRefresh(r => r + 1)
     } catch (err) {
-      setEditError(err.response?.data?.error || 'Error updating tournament')
+      const message = err.response?.data?.error || 'Error updating tournament'
+      setEditError(message)
+      const lower = message.toLowerCase()
+      setEditNameError(lower.includes('name'))
+      setEditStartDateError(lower.includes('start') || lower.includes('date'))
+      setEditEndDateError(lower.includes('end'))
     } finally {
       setEditLoading(false)
     }
@@ -163,6 +175,7 @@ function TournamentManagePage() {
     e.preventDefault()
     setOrgError(null)
     setOrgSuccess(null)
+    setOrgInputError(false)
     if (!newOrganizerUsername.trim()) {
       setOrgError('Please enter a username.')
       return
@@ -187,6 +200,7 @@ function TournamentManagePage() {
       } else {
         setOrgError(err.response?.data?.error || 'Error adding organizer')
       }
+      setOrgInputError(true)
     } finally {
       setOrgLoading(false)
     }
@@ -256,7 +270,16 @@ function TournamentManagePage() {
   if (loading) return <p className="page-container">Loading...</p>
   if (error) return <p className="text-error page-container">{error}</p>
   if (!tournament) return null
-  if (!canManage) return <p className="text-error page-container">403 - Unauthorized to manage this tournament.</p>
+  if (!canManage) return (
+    <div className="page-container-mid">
+      <div className="card-hero">
+        <h1>403 - Unauthorized</h1>
+        <p className="hero-copy">
+          You don't have permission to access this page.
+        </p>
+      </div>
+    </div>
+  )
 
   return (
     <div className="page-container-mid">
@@ -420,9 +443,12 @@ function TournamentManagePage() {
               <input
                 type="text"
                 value={editName}
-                onChange={(e) => setEditName(e.target.value)}
+                onChange={(e) => {
+                  setEditName(e.target.value)
+                  setEditNameError(false)
+                }}
                 required
-                className="form-control"
+                className={editNameError ? 'form-control input-error' : 'form-control'}
               />
             </div>
             <div className="form-group">
@@ -439,9 +465,12 @@ function TournamentManagePage() {
               <input
                 type="date"
                 value={editStartDate}
-                onChange={(e) => setEditStartDate(e.target.value)}
+                onChange={(e) => {
+                  setEditStartDate(e.target.value)
+                  setEditStartDateError(false)
+                }}
                 required
-                className="form-control"
+                className={editStartDateError ? 'form-control input-error' : 'form-control'}
               />
             </div>
             <div className="form-group">
@@ -449,8 +478,11 @@ function TournamentManagePage() {
               <input
                 type="date"
                 value={editEndDate}
-                onChange={(e) => setEditEndDate(e.target.value)}
-                className="form-control"
+                onChange={(e) => {
+                  setEditEndDate(e.target.value)
+                  setEditEndDateError(false)
+                }}
+                className={editEndDateError ? 'form-control input-error' : 'form-control'}
               />
             </div>
             {editError && <p className="text-error">{editError}</p>}
@@ -529,9 +561,12 @@ function TournamentManagePage() {
               <input
                 type="text"
                 value={newOrganizerUsername}
-                onChange={(e) => setNewOrganizerUsername(e.target.value)}
+                onChange={(e) => {
+                  setNewOrganizerUsername(e.target.value)
+                  setOrgInputError(false)
+                }}
                 placeholder="Enter organizer username"
-                className="form-control form-control-sm"
+                className={orgInputError ? 'form-control form-control-sm input-error' : 'form-control form-control-sm'}
               />
             </div>
             {orgError && <p className="text-error">{orgError}</p>}
