@@ -196,6 +196,11 @@ textarea,
   border-radius: 4px;
 }
 
+.input-error {
+  border-color: red;
+  background: #fff3f3;
+}
+
 .form-control-sm {
   width: auto;
   min-width: 120px;

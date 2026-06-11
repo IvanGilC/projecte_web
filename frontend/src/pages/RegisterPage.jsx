@@ -7,6 +7,8 @@ function RegisterPage() {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [usernameError, setUsernameError] = useState(false)
+  const [emailError, setEmailError] = useState(false)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
 
@@ -16,6 +18,8 @@ function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError(null)
+    setUsernameError(false)
+    setEmailError(false)
     setLoading(true)
 
     try {
@@ -24,7 +28,11 @@ function RegisterPage() {
       login(res.data)
       navigate('/')
     } catch (err) {
-      setError(err.response?.data?.error || 'Registration failed')
+      const message = err.response?.data?.error || 'Registration failed'
+      setError(message)
+      const lower = message.toLowerCase()
+      setUsernameError(lower.includes('username'))
+      setEmailError(lower.includes('email'))
     } finally {
       setLoading(false)
     }
@@ -45,7 +53,11 @@ function RegisterPage() {
           <input
             type="text"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => {
+              setUsername(e.target.value)
+              setUsernameError(false)
+            }}
+            className={usernameError ? 'input-error' : ''}
             required
           />
         </div>
@@ -55,7 +67,11 @@ function RegisterPage() {
           <input
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value)
+              setEmailError(false)
+            }}
+            className={emailError ? 'input-error' : ''}
             required
           />
         </div>
@@ -65,7 +81,9 @@ function RegisterPage() {
           <input
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value)
+            }}
             required
           />
         </div>

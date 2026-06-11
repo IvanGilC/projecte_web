@@ -10,9 +10,13 @@ function ProtectedRoute({ children, roles }) {
 
   if (roles && !roles.includes(user.role)) {
     return (
-      <div className="page-container">
-        <h2>403 - Unauthorized</h2>
-        <p>You don't have permission to access this page.</p>
+      <div className="page-container-mid">
+        <div className="card-hero">
+          <h1>403 - Unauthorized</h1>
+          <p className="hero-copy">
+            You don't have permission to access this page.
+          </p>
+        </div>
       </div>
     )
   }

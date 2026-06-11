@@ -33,8 +33,11 @@ function App() {
           </ProtectedRoute>
         } />
 
-        {/* MODIFICADO: perfil ahora es público, sin ProtectedRoute */}
-        <Route path="/profile/:username" element={<ProfilePage />} />
+        <Route path="/profile/:username" element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        } />
 
         <Route path="/tournaments/:id" element={<TournamentDetailPage />} />
 
@@ -44,14 +47,12 @@ function App() {
           </ProtectedRoute>
         } />
 
-        {/* NUEVO: mis inscripciones (solo jugadores) */}
         <Route path="/my-registrations" element={
           <ProtectedRoute roles={['player']}>
             <MyRegistrationsPage />
           </ProtectedRoute>
         } />
 
-        {/* NUEVO: mis torneos (solo organizadores) */}
         <Route path="/my-tournaments" element={
           <ProtectedRoute roles={['organizer']}>
             <MyTournamentsPage />

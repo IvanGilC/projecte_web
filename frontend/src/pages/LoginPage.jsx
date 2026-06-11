@@ -6,6 +6,8 @@ import { login as loginService } from '../services/authService.js'
 function LoginPage() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [usernameError, setUsernameError] = useState(false)
+  const [passwordError, setPasswordError] = useState(false)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
 
@@ -15,6 +17,8 @@ function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError(null)
+    setUsernameError(false)
+    setPasswordError(false)
     setLoading(true)
 
     try {
@@ -22,7 +26,11 @@ function LoginPage() {
       login(res.data)
       navigate('/')
     } catch (err) {
-      setError(err.response?.data?.error || 'Login failed')
+      const message = err.response?.data?.error || 'Login failed'
+      setError(message)
+      const lower = message.toLowerCase()
+      setUsernameError(lower.includes('username'))
+      setPasswordError(lower.includes('password'))
     } finally {
       setLoading(false)
     }
@@ -38,7 +46,11 @@ function LoginPage() {
           <input
             type="text"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => {
+              setUsername(e.target.value)
+              setUsernameError(false)
+            }}
+            className={usernameError ? 'input-error' : ''}
             required
           />
         </div>
@@ -48,7 +60,11 @@ function LoginPage() {
           <input
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value)
+              setPasswordError(false)
+            }}
+            className={passwordError ? 'input-error' : ''}
             required
           />
         </div>

@@ -16,6 +16,8 @@ function VideogamesPage() {
   const [formName, setFormName] = useState('')
   const [formDescription, setFormDescription] = useState('')
   const [formError, setFormError] = useState(null)
+  const [formNameError, setFormNameError] = useState(false)
+  const [formDescriptionError, setFormDescriptionError] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
 
   useEffect(() => {
@@ -46,6 +48,8 @@ function VideogamesPage() {
     setFormName('')
     setFormDescription('')
     setFormError(null)
+    setFormNameError(false)
+    setFormDescriptionError(false)
     setShowForm(true)
   }
 
@@ -54,6 +58,8 @@ function VideogamesPage() {
     setFormName(vg.name)
     setFormDescription(vg.description || '')
     setFormError(null)
+    setFormNameError(false)
+    setFormDescriptionError(false)
     setShowForm(true)
   }
 
@@ -61,11 +67,15 @@ function VideogamesPage() {
     setShowForm(false)
     setEditingVg(null)
     setFormError(null)
+    setFormNameError(false)
+    setFormDescriptionError(false)
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setFormError(null)
+    setFormNameError(false)
+    setFormDescriptionError(false)
     setFormLoading(true)
     try {
       if (editingVg) {
@@ -82,7 +92,11 @@ function VideogamesPage() {
       handleCloseForm()
       setRefresh(r => r + 1)
     } catch (err) {
-      setFormError(err.response?.data?.error || 'Error saving videogame')
+      const message = err.response?.data?.error || 'Error saving videogame'
+      setFormError(message)
+      const lower = message.toLowerCase()
+      setFormNameError(lower.includes('name'))
+      setFormDescriptionError(lower.includes('description'))
     } finally {
       setFormLoading(false)
     }
@@ -155,7 +169,11 @@ function VideogamesPage() {
                 <input
                   type="text"
                   value={formName}
-                  onChange={(e) => setFormName(e.target.value)}
+                  onChange={(e) => {
+                    setFormName(e.target.value)
+                    setFormNameError(false)
+                  }}
+                  className={formNameError ? 'input-error' : ''}
                   required
                 />
               </div>
@@ -163,7 +181,11 @@ function VideogamesPage() {
                 <label>Description</label><br />
                 <textarea
                   value={formDescription}
-                  onChange={(e) => setFormDescription(e.target.value)}
+                  onChange={(e) => {
+                    setFormDescription(e.target.value)
+                    setFormDescriptionError(false)
+                  }}
+                  className={formDescriptionError ? 'input-error' : ''}
                   rows={3}
                 />
               </div>
