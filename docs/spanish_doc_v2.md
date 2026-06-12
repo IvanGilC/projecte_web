@@ -318,3 +318,84 @@ El desarrollo del frontend requirió añadir dos endpoints nuevos al backend que
 - **`GET /api/users/:id/tournaments`**: Necesario para implementar la página "Mis Torneos" del rol organizador. El frontend necesitaba obtener únicamente los torneos de los que un organizador es propietario, para ofrecerle un acceso rápido a su gestión sin mostrar torneos ajenos.
 
 Ambos endpoints siguen los mismos criterios de seguridad del resto de la API: solo el propio usuario o un administrador puede acceder a los datos de otro usuario.
+
+---
+
+## Páginas del Frontend y funcionalidad
+
+### `/` — HomePage
+Página de inicio, accesible públicamente. Muestra un resumen con estadísticas generales (número total de torneos, torneos en curso, próximos torneos, videojuegos disponibles) y listados rápidos de los torneos en curso y próximos, con enlaces directos a su página de detalle.
+
+### `/login` — LoginPage
+Formulario de inicio de sesión. Al autenticarse correctamente, guarda el token JWT y los datos del usuario (`token`, `id`, `username`, `role`) en `localStorage` y en el contexto de autenticación, redirigiendo a la home.
+
+### `/register` — RegisterPage
+Formulario de registro público. Crea un usuario con rol `player` por defecto y, tras el registro, inicia sesión automáticamente.
+
+### `/videogames` — VideogamesPage
+Lista pública de todos los videojuegos, con filtro textual por nombre. Los usuarios con rol `admin` pueden crear, editar y eliminar videojuegos desde esta misma vista mediante un modal.
+
+### `/tournaments` — TournamentsPage
+Lista pública de todos los torneos, con filtros por nombre, videojuego y estado (`planned`, `ongoing`, `finished`). Cada torneo muestra el videojuego asociado, estado, fechas, número máximo de jugadores y si las inscripciones están abiertas. Desde cada elemento se puede navegar al detalle del torneo.
+
+### `/tournaments/:id` — TournamentDetailPage
+Página de detalle público de un torneo. Incluye datos generales, lista de organizadores y jugadores inscritos (con su estado de inscripción), y las partidas del torneo en tres vistas posibles: tabla general, árbol de eliminatoria (`EliminationBracket`) para torneos de tipo `elimination`, y tabla de clasificación de liga (`LeagueTable`) para torneos de tipo `league`. Si el torneo está finalizado, muestra la clasificación final. Si el usuario autenticado tiene rol `player`, las inscripciones están abiertas y el torneo está en estado `planned`, se muestra un botón para inscribirse; si ya está inscrito, se indica visualmente. Si el usuario es `organizer` o `admin`, se muestra un enlace a la página de gestión del torneo.
+
+### `/tournaments/new` — TournamentCreatePage
+Formulario de creación de torneos, accesible solo para `organizer`. Permite especificar nombre, descripción, videojuego, tipo (`elimination` o `league`), fecha de inicio, fecha de fin (opcional) y número máximo de jugadores. Al crearlo, redirige a la página de detalle del nuevo torneo.
+
+### `/tournaments/:id/manage` — TournamentManagePage
+Página de gestión de un torneo, accesible para el propietario, organizadores de soporte y `admin`. La interfaz se adapta según el rol del usuario respecto al torneo:
+- **Todos los gestores** (propietario, organizadores de soporte, admin): pueden ver y aprobar/rechazar inscripciones de jugadores, y ver/editar las partidas (introducir resultados y asignar ganador) mientras no estén completadas.
+- **Solo el propietario** (o admin): puede editar los datos básicos del torneo, abrir/cerrar inscripciones, iniciar el torneo (`/start`), finalizarlo (`/finish`), eliminarlo, y añadir o eliminar organizadores de soporte (buscándolos por nombre de usuario).
+
+Los controles que el usuario actual no tiene permiso de usar se ocultan o se sustituyen por un mensaje informativo.
+
+### `/my-registrations` — MyRegistrationsPage
+Accesible solo para usuarios con rol `player`. Muestra los torneos en los que el jugador está inscrito junto con el estado de cada inscripción (`pending`, `approved`, `rejected`) y el estado del torneo.
+
+### `/my-tournaments` — MyTournamentsPage
+Accesible solo para usuarios con rol `organizer`. Muestra los torneos de los que el usuario es propietario, con acceso directo a su vista de detalle y de gestión.
+
+### `/profile/:username` — ProfilePage
+Perfil público de un usuario, accesible para cualquier visitante autenticado. Muestra información pública (username, rol, email) y el historial de partidas jugadas, con resultado (victoria/derrota), marcador y estado de cada partida. Si el usuario autenticado visita su propio perfil (o es `admin`), dispone de un formulario para editar su email y/o contraseña.
+
+### `/users` — UsersPage
+Accesible solo para `admin`. Lista completa de usuarios del sistema, con filtros por nombre de usuario y rol, y acciones para ver el perfil o eliminar un usuario.
+
+### `/users/new` — UserCreatePage
+Accesible solo para `admin`. Formulario para crear manualmente un nuevo usuario, con selección de rol (`player`, `organizer`, `admin`).
+
+### `*` — NotFoundPage
+Página de error 404 para cualquier ruta no reconocida.
+
+### Componentes auxiliares
+- **`Navbar`**: barra de navegación adaptativa según el estado de autenticación y rol del usuario (enlaces públicos, login/registro, perfil, "Mis Inscripciones" para players, "Nuevo Torneo"/"Mis Torneos" para organizers, "Usuarios"/"Nuevo Usuario" para admin, y logout).
+- **`ProtectedRoute`**: envuelve rutas que requieren autenticación y/o un rol concreto. Si el usuario no está autenticado, redirige a `/login`. Si su rol no está permitido, muestra una página de "403 - No autorizado".
+
+---
+
+## Instrucciones de ejecución
+
+### Backend
+
+1. Crear un archivo `.env` en la raíz del proyecto con:
+   ```
+   SECRET=tu_secreto_jwt
+   ADMIN_PASSWORD=tu_password_admin
+   ```
+2. Instalar dependencias: `npm install`
+3. Arrancar en modo desarrollo: `npm run dev`
+4. El backend corre en `http://localhost:3001`
+
+### Frontend
+
+1. Entrar en la carpeta `frontend`: `cd frontend`
+2. Instalar dependencias: `npm install`
+3. Arrancar en modo desarrollo: `npm run dev`
+4. El frontend corre en `http://localhost:5173`
+
+### Notas
+
+- Ambos servidores deben estar corriendo simultáneamente para que la app funcione.
+- Si no existe ningún usuario admin, se crea automáticamente uno al arrancar el backend con las credenciales `admin` / `ADMIN_PASSWORD`.
