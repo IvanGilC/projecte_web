@@ -370,7 +370,7 @@ Accesible solo para `admin`. Formulario para crear manualmente un nuevo usuario,
 Página de error 404 para cualquier ruta no reconocida.
 
 ### Componentes auxiliares
-- **`Navbar`**: barra de navegación adaptativa según el estado de autenticación y rol del usuario (enlaces públicos, login/registro, perfil, "Mis Inscripciones" para players, "Nuevo Torneo"/"Mis Torneos" para organizers, "Usuarios"/"Nuevo Usuario" para admin, y logout).
+- **`Navbar`**: barra de navegación adaptativa según el estado de autenticación y rol del usuario (enlaces públicos, Login/Register, Profile, "My Registrations" para players, "New Tournament"/"My Tournaments" para organizers, "Users"/"New User" para admin, y Logout).
 - **`ProtectedRoute`**: envuelve rutas que requieren autenticación y/o un rol concreto. Si el usuario no está autenticado, redirige a `/login`. Si su rol no está permitido, muestra una página de "403 - No autorizado".
 
 ---
@@ -381,8 +381,10 @@ Página de error 404 para cualquier ruta no reconocida.
 
 1. Crear un archivo `.env` en la raíz del proyecto con:
    ```
-   SECRET=tu_secreto_jwt
-   ADMIN_PASSWORD=tu_password_admin
+   SQLITE_URL=database.db
+   PORT=3001
+   SECRET=lol
+   ADMIN_PASSWORD=admin1234
    ```
 2. Instalar dependencias: `npm install`
 3. Arrancar en modo desarrollo: `npm run dev`
