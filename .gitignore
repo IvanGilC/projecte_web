@@ -140,3 +140,14 @@ vite.config.ts.timestamp-*
 
 # SQLite database
 *.db
+
+# Editor directories and files (applies repo-wide, not just /frontend)
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
